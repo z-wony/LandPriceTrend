@@ -1,0 +1,23 @@
+{
+  "name": "land-prive-trend",
+  "version": "0.0.1",
+  "description": "Checking trend of price which has been traded really",
+  "main": "index.js",
+  "dependencies": {
+    "xml2js": "0.4.23",
+    "sync-request": "6.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/z-wony/LandPriceTrend.git"
+  },
+  "author": "z-wony (Jiwon Kim)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/z-wony/LandPriceTrend/issues"
+  },
+  "homepage": "https://github.com/z-wony/LandPriceTrend#readme"
+}
