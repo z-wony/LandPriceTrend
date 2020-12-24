@@ -1,10 +1,15 @@
 #!/bin/node
 
+var k = require('./apikey.js');
+
 var urlBase = 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev?ServiceKey=';
 
 // Service Key Request: https://data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15057511
-var serviceKey = 'INPUT_YOUR_KEY'
+var serviceKey = k.serviceKey;
+
 var numOfRows = 1000;
+
+// https://www.code.go.kr/index.do
 var landCode = '41465';
 
 function cookingUrl(base, key, pn, rows, code, ym) {
@@ -19,7 +24,7 @@ var parseString = require('xml2js').parseString;
 
 var keylist = [ '도로명', '도로명건물본번호코드', '도로명건물부번호코드', '도로명코드',
 				'법정동', '법정동본번코드', '법정동부번코드', '지번',
-				'아파트', '일련번호', '전용면적', '층', '월', '일', '거래금액' ];
+				'아파트', '일련번호', '전용면적', '층', '연', '월', '일', '거래금액' ];
 
 var keystr = 'No';
 keylist.forEach(function(key) {
@@ -37,6 +42,9 @@ var index = 1;
 
 for (var y = startYear; y <= endYear; y++) {
   for (var m = 1; m <= 12; m++) {
+    if (y == startYear && m == 1)
+      m = startMonth;
+
     ym = '' + y;
     if (m < 10) {
       ym += '0' + m;
@@ -65,7 +73,9 @@ function printPrice(yearMonth) {
     //console.log('yearMonth: ' + yearMonth + ', status: ' + res.statusCode);
     var xml = res.getBody().toString();
     parseString(xml, function (err, result) {
-        console.log(err);
+        if (err)
+          return;
+
         queryCount += parseInt(result.response.body[0].numOfRows);
         totalCount = parseInt(result.response.body[0].totalCount);
         remainCount = totalCount - queryCount;
@@ -74,7 +84,9 @@ function printPrice(yearMonth) {
             var printstr = '' + index;
             keylist.forEach(function(key) {
                 if (key == '거래금액')
-                  printstr = printstr + ',' + item[key].toString().trim().replace(',', '');
+                  printstr = printstr + ',' + item[key].toString().trim().replace(',', '').replace(',', '');
+                else if (key == '연')
+                  printstr = printstr + ',' + yearMonth.substring(0, 4);
                 else
                   printstr = printstr + ',' + item[key];
                 });
